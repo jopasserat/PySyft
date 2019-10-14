@@ -45,16 +45,15 @@ def start_websocket_server_worker(id, host, port, hook, verbose, keep_labels=Non
         dataset = sy.BaseDataset(
             data=selected_data, targets=selected_targets, transform=mnist_dataset.transform
         )
-        key = "mnist"
-    else:
-        dataset = sy.BaseDataset(
-            data=mnist_dataset.data,
-            targets=mnist_dataset.targets,
-            transform=mnist_dataset.transform,
-        )
-        key = "mnist_testing"
 
-    server.add_dataset(dataset, key=key)
+        server.add_dataset(dataset, key="mnist")
+
+    # register a test dataset on all workers
+    test_dataset = sy.BaseDataset(
+        data=mnist_dataset.data, targets=mnist_dataset.targets, transform=mnist_dataset.transform
+    )
+
+    server.add_dataset(test_dataset, key="mnist_testing")
 
     logger.info("datasets: %s", server.datasets)
     if training:
@@ -86,7 +85,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--testing",
         action="store_true",
-        help="if set, websocket server worker will load the test dataset instead of the training dataset",
+        help="if set, websocket server worker will only load the test dataset and won't load the training dataset",
     )
     parser.add_argument(
         "--verbose",
