@@ -13,7 +13,7 @@ FORMAT = "%(asctime)s %(message)s"
 logging.basicConfig(format=FORMAT)
 
 import syft as sy
-from syft import workers
+import syft.workers.websocket_client as workers
 from syft.frameworks.torch.federated import utils
 
 logger = logging.getLogger(__name__)
